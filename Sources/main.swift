@@ -2,9 +2,9 @@ import Cocoa
 import ApplicationServices
 import Carbon.HIToolbox
 
-// HalfSnap — left/right window halves via Accessibility (Rectangle's core, ~nothing else)
+// HalfSnap — left/right halves + fill via Accessibility (Rectangle's core, ~nothing else)
 
-enum Side { case left, right }
+enum SnapAction { case left, right, fill }
 
 // MARK: - AX
 
@@ -165,7 +165,7 @@ func screenForWindowAXFrame(_ axFrame: CGRect) -> NSScreen {
     return NSScreen.screens.first { NSMouseInRect(center, $0.frame, false) } ?? NSScreen.main ?? NSScreen.screens[0]
 }
 
-func snap(_ side: Side) {
+func snap(_ action: SnapAction) {
     guard AX.ensureTrusted() else {
         NSSound.beep()
         return
@@ -177,20 +177,22 @@ func snap(_ side: Side) {
     let screen = screenForWindowAXFrame(axFrame)
     let vf = screen.visibleFrame
     let w = floor(vf.width / 2)
-    let rect: CGRect = switch side {
+    // fill = all usable space (menu bar / Dock excluded) — not macOS Full Screen
+    let rect: CGRect = switch action {
     case .left:  CGRect(x: vf.minX, y: vf.minY, width: w, height: vf.height)
     case .right: CGRect(x: vf.maxX - w, y: vf.minY, width: w, height: vf.height)
+    case .fill:  vf
     }
     AX.setFrame(win, rect)
 }
 
-// MARK: - Hotkeys (⌘← / ⌘→ via CGEvent tap — pass through in text fields)
+// MARK: - Hotkeys (⌘← / ⌘→ / ⌘↑ via CGEvent tap — pass through in text fields)
 
 final class HotKeys {
     private var tap: CFMachPort?
     private var source: CFRunLoopSource?
 
-    /// Global ⌘←/→ snap. Menu Snap Left/Right always work.
+    /// Global snap hotkeys. Menu items always work.
     var isEnabled: Bool = UserDefaults.standard.object(forKey: "shortcutsEnabled") as? Bool ?? true {
         didSet { UserDefaults.standard.set(isEnabled, forKey: "shortcutsEnabled") }
     }
@@ -230,9 +232,13 @@ final class HotKeys {
         guard isEnabled else { return Unmanaged.passUnretained(event) }
 
         let key = event.getIntegerValueField(.keyboardEventKeycode)
-        guard key == Int64(kVK_LeftArrow) || key == Int64(kVK_RightArrow) else {
-            return Unmanaged.passUnretained(event)
+        let action: SnapAction? = switch key {
+        case Int64(kVK_LeftArrow):  .left
+        case Int64(kVK_RightArrow): .right
+        case Int64(kVK_UpArrow):    .fill
+        default: nil
         }
+        guard let action else { return Unmanaged.passUnretained(event) }
 
         // Pure ⌘ only (keep ⌘⇧← select-to-line-start, etc.)
         let mods: CGEventFlags = [.maskCommand, .maskShift, .maskAlternate, .maskControl]
@@ -245,9 +251,8 @@ final class HotKeys {
             return Unmanaged.passUnretained(event)
         }
 
-        let side: Side = key == Int64(kVK_LeftArrow) ? .left : .right
-        DispatchQueue.main.async { snap(side) }
-        return nil // swallow — prevents Brave ⌘←/→ history
+        DispatchQueue.main.async { snap(action) }
+        return nil // swallow — prevents Brave history / other defaults
     }
 }
 
@@ -289,6 +294,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "Snap Left  ⌘←", action: #selector(snapLeft), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "Snap Right  ⌘→", action: #selector(snapRight), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Fill Screen  ⌘↑", action: #selector(snapFill), keyEquivalent: ""))
         menu.addItem(.separator())
         let shortcuts = NSMenuItem(title: "Keyboard Shortcuts", action: #selector(toggleShortcuts), keyEquivalent: "")
         menu.addItem(shortcuts)
@@ -307,6 +313,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func snapLeft() { snap(.left) }
     @objc private func snapRight() { snap(.right) }
+    @objc private func snapFill() { snap(.fill) }
 
     @objc private func toggleShortcuts() {
         hotKeys.isEnabled.toggle()
@@ -318,7 +325,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         shortcutsMenuItem?.state = on ? .on : .off
         statusItem?.button?.appearsDisabled = !on
         statusItem?.button?.toolTip = on
-            ? "HalfSnap — ⌘← left · ⌘→ right"
+            ? "HalfSnap — ⌘← left · ⌘→ right · ⌘↑ fill"
             : "HalfSnap — shortcuts off"
     }
 

@@ -1,6 +1,6 @@
 # HalfSnap
 
-Left / right window halves. Accessibility only. No drag-snap, no prefs, no updater.
+Left / right window halves + fill. Accessibility only. No drag-snap, no prefs, no updater.
 
 ## Hotkeys
 
@@ -8,10 +8,11 @@ Left / right window halves. Accessibility only. No drag-snap, no prefs, no updat
 |----------|--------|
 | `⌘←` | Left half |
 | `⌘→` | Right half |
+| `⌘↑` | Fill screen (usable area, not Full Screen) |
 
 Disabled while a native text field / editor is focused (line start/end still works). Prefer snap over browser history when focus is ambiguous. Terminals (Warp, etc.) always snap.
 
-Menu bar → **Keyboard Shortcuts** toggles ⌘←/→ (persists). Menu Snap Left/Right still work when off.
+Menu bar → **Keyboard Shortcuts** toggles hotkeys (persists). Menu snap actions still work when off.
 
 ## Run
 

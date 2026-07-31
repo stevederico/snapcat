@@ -1,5 +1,9 @@
 - multi-display snap polish
-- optional full-screen / maximize hotkey
+
+0.8.0
+
+  Add fill screen on Cmd-Up
+  Menu Fill Screen action
 
 0.7.0
 
