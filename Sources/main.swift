@@ -73,11 +73,42 @@ enum AX {
         guard AXIsProcessTrusted(),
               let app = NSWorkspace.shared.frontmostApplication else { return false }
         if isTerminalApp(app) { return false }
+        guard let el = focusedElement(of: app) else { return false }
+        return isTextInput(el)
+    }
+
+    /// App-level focus fails in Chromium (Brave/Chrome) for web forms — walk the window for `AXFocused`.
+    private static func focusedElement(of app: NSRunningApplication) -> AXUIElement? {
         let appEl = AXUIElementCreateApplication(app.processIdentifier)
         var ref: CFTypeRef?
-        guard AXUIElementCopyAttributeValue(appEl, kAXFocusedUIElementAttribute as CFString, &ref) == .success,
-              let ref else { return false }
-        return isTextInput(ref as! AXUIElement)
+        if AXUIElementCopyAttributeValue(appEl, kAXFocusedUIElementAttribute as CFString, &ref) == .success,
+           let ref {
+            return (ref as! AXUIElement)
+        }
+        var winRef: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(appEl, kAXFocusedWindowAttribute as CFString, &winRef) == .success,
+              let winRef else { return nil }
+        var budget = 400
+        return findFocusedDescendant(winRef as! AXUIElement, depth: 0, budget: &budget)
+    }
+
+    private static func findFocusedDescendant(_ el: AXUIElement, depth: Int, budget: inout Int) -> AXUIElement? {
+        if depth > 16 || budget <= 0 { return nil }
+        budget -= 1
+        var focusedRef: CFTypeRef?
+        if AXUIElementCopyAttributeValue(el, kAXFocusedAttribute as CFString, &focusedRef) == .success,
+           let focused = focusedRef as? Bool, focused {
+            return el
+        }
+        var kids: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(el, kAXChildrenAttribute as CFString, &kids) == .success,
+              let kids = kids as? [AXUIElement] else { return nil }
+        for child in kids {
+            if let hit = findFocusedDescendant(child, depth: depth + 1, budget: &budget) {
+                return hit
+            }
+        }
+        return nil
     }
 
     // yagni: static list; add bundle id if another terminal never snaps

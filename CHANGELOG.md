@@ -1,6 +1,11 @@
 - multi-display snap polish
 - optional full-screen / maximize hotkey
 
+0.4.0
+
+  Detect browser form focus
+  Walk Chromium AX tree
+
 0.3.0
 
   Snap works in Warp
