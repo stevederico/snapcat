@@ -1,31 +1,198 @@
-# HalfSnap
+<div align="center">
+  <p style="font-size: 64px; margin: 0; line-height: 1;">◫</p>
+  <h1 style="border-bottom: none; margin-bottom: 0;">HalfSnap</h1>
+  <h3 style="margin-top: 0; font-weight: normal;">
+    left / right / fill / minimize for macos — one file, zero bloat
+  </h3>
+</div>
 
-Left / right window halves + fill. Accessibility only. No drag-snap, no prefs, no updater.
+<br />
 
-## Hotkeys
+HalfSnap is the smallest useful window manager for macOS. Four shortcuts. A menu bar icon. Accessibility APIs. No drag-to-snap, no preference window, no updater, no account.
 
-| Shortcut | Action |
-|----------|--------|
-| `⌘←` | Left half |
-| `⌘→` | Right half |
-| `⌘↑` | Fill screen (usable area, not Full Screen) |
-| `⌘↓` | Minimize window |
+If you want Rectangle with every tile preset — use Rectangle. If you want **⌘ arrows and nothing else** — use this.
 
-Disabled while a native text field / editor is focused (line start/end still works). Prefer snap over browser history when focus is ambiguous. Terminals (Warp, etc.) always snap.
+<br />
 
-Menu bar → **Keyboard Shortcuts** toggles hotkeys (persists). Menu snap actions still work when off.
-
-## Run
+## 🚀 Quick Start
 
 ```bash
-./build.sh          # builds + installs to /Applications/HalfSnap.app
+git clone https://github.com/stevederico/halfsnap.git
+cd halfsnap
+./build.sh
 open -a HalfSnap
 ```
 
-Grant **Accessibility** once for `/Applications/HalfSnap.app`, then quit and reopen HalfSnap.
+1. Grant **Accessibility** when prompted (or System Settings → Privacy & Security → Accessibility → enable **HalfSnap**)
+2. Quit and reopen HalfSnap once so the grant sticks
+3. Press **⌘←** on any window
 
-If the permission dialog keeps popping up: System Settings → Privacy & Security → Accessibility → remove every HalfSnap entry → re-enable the one from **Applications** → restart HalfSnap. (Ad-hoc rebuilds used to break this; builds are now signed with Apple Development so the grant sticks.)
+<br />
 
-## Stop
+## ⌨️ Hotkeys
 
-Menu bar `◫` → Quit HalfSnap, or `pkill -x HalfSnap`.
+| Shortcut | Action |
+|----------|--------|
+| **⌘←** | Left half |
+| **⌘→** | Right half |
+| **⌘↑** | Fill screen (usable area — menu bar and Dock stay put) |
+| **⌘↓** | Minimize |
+
+Not macOS Full Screen. Fill uses the screen's **visible frame** so the window stays a normal windowed app.
+
+<br />
+
+## ✨ What's Included
+
+### 🪟 **Window Actions**
+- **Left / right halves** on the display under the window
+- **Fill** to all usable space (not Stage Manager / Full Screen theater)
+- **Minimize** via Accessibility, same as the yellow button
+
+### 🧠 **Smart Pass-Through**
+- **Typing wins** — in a real text field, ⌘← / ⌘→ stay "line start / line end"
+- **Browsers snap** — page chrome is not treated as a text field (no accidental history back/forward when the tap is healthy)
+- **Terminals snap** — Warp, Terminal, iTerm, and friends always get window actions (their UI is one big text view)
+
+### ☰ **Menu Bar App**
+- **Status item** with Snap Left / Right / Fill / Minimize
+- **Keyboard Shortcuts** checkmark — disable global hotkeys without quitting (persists)
+- **Accessibility Settings…** deep link when the grant goes missing
+- Menu actions still work when hotkeys are off
+
+### 🪶 **Tiny By Design**
+- **One Swift file** — the whole app lives in `Sources/main.swift`
+- **No preferences** — hotkeys are fixed; less code, less UI, fewer bugs
+- **No network** — no updater, analytics, or phoning home
+- **Menu bar only** — `LSUIElement`, no Dock icon
+
+<br />
+
+## 🔧 Requirements
+
+| | |
+|--|--|
+| **macOS** | 13 Ventura or later |
+| **Xcode / CLT** | Swift 5.9+ (`xcode-select --install`) |
+| **Permission** | Accessibility for `/Applications/HalfSnap.app` |
+
+<br />
+
+## 🏗️ Build & Install
+
+`./build.sh` compiles a release binary, wraps it in `HalfSnap.app`, codesigns, and copies to `/Applications`.
+
+```bash
+./build.sh
+# → /Applications/HalfSnap.app
+```
+
+**Signing** (Accessibility grants stick better with a stable code signature):
+
+```bash
+# Default in this repo: your Apple Development identity (if present)
+./build.sh
+
+# Ad-hoc sign (works everywhere; may need re-grant after rebuilds)
+HALFSNAP_SIGN_ID="-" ./build.sh
+
+# Custom identity
+HALFSNAP_SIGN_ID="Apple Development: Your Name (TEAMID)" ./build.sh
+```
+
+Install somewhere else:
+
+```bash
+HALFSNAP_INSTALL="$HOME/Applications" ./build.sh
+```
+
+If the Accessibility dialog keeps popping up: System Settings → Privacy & Security → Accessibility → remove every **HalfSnap** entry → enable the one from **Applications** → restart HalfSnap. Ad-hoc rebuilds change the code hash; macOS treats each as a new app.
+
+<br />
+
+## 🛑 Stop
+
+Menu bar **◫** → **Quit HalfSnap**, or:
+
+```bash
+pkill -x HalfSnap
+```
+
+<br />
+
+## 🧰 Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **Swift** | App language |
+| **Cocoa** | Menu bar status item |
+| **ApplicationServices (AX)** | Read/write front window frames, minimize |
+| **CGEvent tap** | Global ⌘+arrow hotkeys with pass-through |
+| **Carbon.HIToolbox** | Virtual key codes only |
+
+<br />
+
+## 📚 How It Works
+
+1. A **CGEvent tap** watches key-downs for pure ⌘ + arrow (no Shift / Option / Control).
+2. If focus is a **real text field**, the key is left alone (line / document navigation).
+3. Otherwise HalfSnap **swallows** the event and resizes or minimizes the front window via **Accessibility**.
+4. Frames use `NSScreen.visibleFrame` so menu bar and Dock remain visible.
+
+Heavy Accessibility tree walks are intentionally **not** done on the hotkey path — they can timeout the event tap and leak keys (e.g. browser back/forward).
+
+<br />
+
+## 🤝 Contributing
+
+```bash
+git clone https://github.com/stevederico/halfsnap.git
+cd halfsnap
+./build.sh
+open -a HalfSnap
+```
+
+Keep it small. New tile layouts, prefs panes, and updaters are usually out of scope — open an issue first if you're unsure.
+
+<br />
+
+## 📬 Community & Support
+
+- **🐦 X**: [@stevederico](https://x.com/stevederico)
+- **🐛 Issues**: [GitHub Issues](https://github.com/stevederico/halfsnap/issues)
+
+<br />
+
+## 🙏 Acknowledgements
+
+- [Rectangle](https://github.com/rxhanson/Rectangle) — the gold standard; HalfSnap is the opposite end of the spectrum
+- Apple **Accessibility** and **Quartz Event Services** — the whole app is a thin shell over these
+
+<br />
+
+## 🚀 Ready?
+
+```bash
+./build.sh && open -a HalfSnap
+```
+
+Grant Accessibility. Press ⌘←. Done.
+
+<br />
+
+## 📄 License
+
+MIT License — use it however you want. See [LICENSE](LICENSE) for details.
+
+<br />
+
+---
+
+<div align="center">
+  <p>
+    Built with ❤️ by <a href="https://github.com/stevederico">Steve Derico</a>
+  </p>
+  <p>
+    <a href="https://github.com/stevederico/halfsnap">⭐ Star on GitHub</a> — it helps!
+  </p>
+</div>

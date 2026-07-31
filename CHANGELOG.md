@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+1.0.0
+
+  World class open source README
+  Add MIT license
+
 0.9.0
 
   Add minimize on Cmd-Down
