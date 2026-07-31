@@ -9,7 +9,7 @@ Flat **2D vector** commercial kyara — Kewpie / Peko / LINE-sticker energy.
 
 - Bold outlines · solid fills · minimal/no gradients  
 - Big face · few features · reads at small size  
-- Name badge: **Snapu**
+- Name **Snapu** in script on the tummy (no bottom label)
 
 ## Official assets
 
