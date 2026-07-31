@@ -8,15 +8,23 @@ SIGN_ID="${SNAPCAT_SIGN_ID:-${HALFSNAP_SIGN_ID:-Apple Development: Stephen Deric
 INSTALL_DIR="${SNAPCAT_INSTALL:-${HALFSNAP_INSTALL:-/Applications}}"
 BUNDLE_ID="com.stevederico.snapcat"
 
+# Rebuild icons from docs/characters/snapu.jpg when present
+if [[ -f docs/characters/snapu.jpg ]]; then
+  bash scripts/build-icons.sh
+fi
+
 swift build -c release
 BIN=".build/release/SnapCat"
 APP="SnapCat.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/SnapCat"
-if [[ -f Resources/AppIcon.icns ]]; then
-  cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
-fi
+# App + menu bar icons
+for f in AppIcon.icns StatusBarIcon.png diana.k@example.org StatusBarIcon-full.png StatusBarIcon-full@2x.png; do
+  if [[ -f "Resources/$f" ]]; then
+    cp "Resources/$f" "$APP/Contents/Resources/$f"
+  fi
+done
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -28,8 +36,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>CFBundleDisplayName</key><string>Snap Cat</string>
   <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>2.1.0</string>
-  <key>CFBundleVersion</key><string>23</string>
+  <key>CFBundleShortVersionString</key><string>2.2.0</string>
+  <key>CFBundleVersion</key><string>24</string>
   <key>LSMinimumSystemVersion</key><string>13.0</string>
   <key>LSUIElement</key><true/>
   <key>NSHighResolutionCapable</key><true/>
@@ -47,10 +55,8 @@ fi
 
 DEST="$INSTALL_DIR/SnapCat.app"
 rm -rf "$DEST"
-# Remove old HalfSnap install if present (same machine)
 rm -rf "$INSTALL_DIR/HalfSnap.app" 2>/dev/null || true
 cp -R "$APP" "$DEST"
 xattr -cr "$DEST" 2>/dev/null || true
-# Refresh icon cache for Accessibility / Finder
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$DEST" 2>/dev/null || true
 echo "Installed $DEST"

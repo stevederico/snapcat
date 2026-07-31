@@ -3,3 +3,5 @@ HalfSnap.app/
 SnapCat.app/
 .swiftpm/
 *.xcodeproj
+.icon-venv/
+.icon-src/

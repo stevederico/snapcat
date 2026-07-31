@@ -1,5 +1,11 @@
 - multi-display snap polish
 
+2.2.0
+
+  Crop center Snapu for all icons
+  Menu bar Snapu status icon
+  scripts/build-icons.sh pipeline
+
 2.1.0
 
   Add Snapu macOS app icon
