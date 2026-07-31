@@ -91,7 +91,7 @@ func snap(_ side: Side) {
     AX.setFrame(win, rect)
 }
 
-// MARK: - Hotkeys (⌃⌥← / ⌃⌥→)
+// MARK: - Hotkeys (⌘⌥← / ⌘⌥→)
 
 final class HotKeys {
     private var leftRef: EventHotKeyRef?
@@ -110,7 +110,7 @@ final class HotKeys {
         }, 1, &eventType, nil, &handler)
         guard status == noErr else { return }
 
-        let mods = UInt32(controlKey | optionKey)
+        let mods = UInt32(cmdKey | optionKey)
         let leftID = EventHotKeyID(signature: OSType(0x48414C46), id: 1) // 'HALF'
         let rightID = EventHotKeyID(signature: OSType(0x48414C46), id: 2)
         RegisterEventHotKey(UInt32(kVK_LeftArrow), mods, leftID, GetApplicationEventTarget(), 0, &leftRef)
@@ -130,11 +130,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let btn = item.button {
             btn.title = "◫"
-            btn.toolTip = "HalfSnap — ⌃⌥← left · ⌃⌥→ right"
+            btn.toolTip = "HalfSnap — ⌘⌥← left · ⌘⌥→ right"
         }
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Snap Left  ⌃⌥←", action: #selector(snapLeft), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Snap Right  ⌃⌥→", action: #selector(snapRight), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Snap Left  ⌘⌥←", action: #selector(snapLeft), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Snap Right  ⌘⌥→", action: #selector(snapRight), keyEquivalent: ""))
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Accessibility Settings…", action: #selector(openAX), keyEquivalent: ""))
         menu.addItem(.separator())
