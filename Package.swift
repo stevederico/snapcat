@@ -2,9 +2,9 @@
 import PackageDescription
 
 let package = Package(
-    name: "HalfSnap",
+    name: "SnapCat",
     platforms: [.macOS(.v13)],
     targets: [
-        .executableTarget(name: "HalfSnap", path: "Sources"),
+        .executableTarget(name: "SnapCat", path: "Sources"),
     ]
 )

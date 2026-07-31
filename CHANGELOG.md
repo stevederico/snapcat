@@ -1,5 +1,11 @@
 - multi-display snap polish
 
+2.0.0
+
+  Rebrand product to Snap Cat
+  Snapu cat mascot with tail
+  Remove magnet hand circles
+
 1.2.0
 
   Four JP brand character concepts

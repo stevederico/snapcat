@@ -1,20 +1,18 @@
-# Snapu — official character (cat)
+# Snap Cat — official character
 
-**Snapu** is HalfSnap’s brand kyara — a **cat** in Japanese product-mascot style.
+Product: **Snap Cat**  
+Character: **Snapu** (the cat)
 
 ## Official assets
 
 | File | Use |
 |------|-----|
-| **`snapu.jpg`** | Hero — mint window-body cat + coral magnets |
-| **`snapu-icon.jpg`** | Alt cat (face-forward) |
-| `snapu-cat-a.jpg` / `snapu-cat-b.jpg` | Same two variants |
-| `snapu-source.jpg` | Original non-cat window pick (pre-cat) |
-| `snapu-window.jpg` | Window mascot before cat redesign |
+| **`snap-cat.jpg`** / **`snapu.jpg`** | Hero — mint window cat, paws, tail |
+| **`snap-cat-icon.jpg`** / **`snapu-icon.jpg`** | Icon pose |
 
 ### Design
-- **Cat** ears, whiskers, sparkly eyes  
-- Mint-green **window** body + cream face  
-- **Coral magnet / suction hands** (snap)  
+- Mint-green **window** body + cream face grid  
+- **Cat** ears, eyes, whiskers, **tail**  
+- Soft cream **paws** (no magnet circles)  
 
-**Tagline:** *Snapu — windows that click into place.*
+**Tagline:** *Snap Cat — windows that click into place.*

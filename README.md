@@ -1,14 +1,17 @@
 <div align="center">
-  <p style="font-size: 64px; margin: 0; line-height: 1;">◫</p>
-  <h1 style="border-bottom: none; margin-bottom: 0;">HalfSnap</h1>
+  <img src="docs/characters/snap-cat.jpg" width="220" alt="Snapu — Snap Cat mascot">
+  <h1 style="border-bottom: none; margin-bottom: 0;">Snap Cat</h1>
   <h3 style="margin-top: 0; font-weight: normal;">
     left / right / fill / minimize for macos — one file, zero bloat
   </h3>
+  <p><em>windows that click into place</em></p>
 </div>
 
 <br />
 
-HalfSnap is the smallest useful window manager for macOS. Four shortcuts. A menu bar icon. Accessibility APIs. No drag-to-snap, no preference window, no updater, no account.
+**Snap Cat** is the smallest useful window manager for macOS. Four shortcuts. A menu bar icon. Accessibility APIs. No drag-to-snap, no preference window, no updater, no account.
+
+Meet **Snapu** — the little window cat who snaps panes into place.
 
 If you want Rectangle with every tile preset — use Rectangle. If you want **⌘ arrows and nothing else** — use this.
 
@@ -20,12 +23,14 @@ If you want Rectangle with every tile preset — use Rectangle. If you want **�
 git clone https://github.com/stevederico/halfsnap.git
 cd halfsnap
 ./build.sh
-open -a HalfSnap
+open -a SnapCat
 ```
 
-1. Grant **Accessibility** when prompted (or System Settings → Privacy & Security → Accessibility → enable **HalfSnap**)
-2. Quit and reopen HalfSnap once so the grant sticks
+1. Grant **Accessibility** when prompted (or System Settings → Privacy & Security → Accessibility → enable **Snap Cat**)
+2. Quit and reopen Snap Cat once so the grant sticks
 3. Press **⌘←** on any window
+
+> Formerly **HalfSnap**. Same hotkeys; new name and mascot. Bundle id is now `com.stevederico.snapcat` — re-grant Accessibility once after upgrading.
 
 <br />
 
@@ -74,17 +79,17 @@ Not macOS Full Screen. Fill uses the screen's **visible frame** so the window st
 |--|--|
 | **macOS** | 13 Ventura or later |
 | **Xcode / CLT** | Swift 5.9+ (`xcode-select --install`) |
-| **Permission** | Accessibility for `/Applications/HalfSnap.app` |
+| **Permission** | Accessibility for `/Applications/SnapCat.app` |
 
 <br />
 
 ## 🏗️ Build & Install
 
-`./build.sh` compiles a release binary, wraps it in `HalfSnap.app`, codesigns, and copies to `/Applications`.
+`./build.sh` compiles a release binary, wraps it in `SnapCat.app`, codesigns, and copies to `/Applications`.
 
 ```bash
 ./build.sh
-# → /Applications/HalfSnap.app
+# → /Applications/SnapCat.app
 ```
 
 **Signing** (Accessibility grants stick better with a stable code signature):
@@ -94,28 +99,28 @@ Not macOS Full Screen. Fill uses the screen's **visible frame** so the window st
 ./build.sh
 
 # Ad-hoc sign (works everywhere; may need re-grant after rebuilds)
-HALFSNAP_SIGN_ID="-" ./build.sh
+SNAPCAT_SIGN_ID="-" ./build.sh
 
 # Custom identity
-HALFSNAP_SIGN_ID="Apple Development: Your Name (TEAMID)" ./build.sh
+SNAPCAT_SIGN_ID="Apple Development: Your Name (TEAMID)" ./build.sh
 ```
 
 Install somewhere else:
 
 ```bash
-HALFSNAP_INSTALL="$HOME/Applications" ./build.sh
+SNAPCAT_INSTALL="$HOME/Applications" ./build.sh
 ```
 
-If the Accessibility dialog keeps popping up: System Settings → Privacy & Security → Accessibility → remove every **HalfSnap** entry → enable the one from **Applications** → restart HalfSnap. Ad-hoc rebuilds change the code hash; macOS treats each as a new app.
+If the Accessibility dialog keeps popping up: System Settings → Privacy & Security → Accessibility → remove every **Snap Cat** / old **HalfSnap** entry → enable the one from **Applications** → restart Snap Cat.
 
 <br />
 
 ## 🛑 Stop
 
-Menu bar **◫** → **Quit HalfSnap**, or:
+Menu bar icon → **Quit Snap Cat**, or:
 
 ```bash
-pkill -x HalfSnap
+pkill -x SnapCat
 ```
 
 <br />
@@ -136,7 +141,7 @@ pkill -x HalfSnap
 
 1. A **CGEvent tap** watches key-downs for pure ⌘ + arrow (no Shift / Option / Control).
 2. If focus is a **real text field**, the key is left alone (line / document navigation).
-3. Otherwise HalfSnap **swallows** the event and resizes or minimizes the front window via **Accessibility**.
+3. Otherwise Snap Cat **swallows** the event and resizes or minimizes the front window via **Accessibility**.
 4. Frames use `NSScreen.visibleFrame` so menu bar and Dock remain visible.
 
 Heavy Accessibility tree walks are intentionally **not** done on the hotkey path — they can timeout the event tap and leak keys (e.g. browser back/forward).
@@ -149,7 +154,7 @@ Heavy Accessibility tree walks are intentionally **not** done on the hotkey path
 git clone https://github.com/stevederico/halfsnap.git
 cd halfsnap
 ./build.sh
-open -a HalfSnap
+open -a SnapCat
 ```
 
 Keep it small. New tile layouts, prefs panes, and updaters are usually out of scope — open an issue first if you're unsure.
@@ -165,7 +170,7 @@ Keep it small. New tile layouts, prefs panes, and updaters are usually out of sc
 
 ## 🙏 Acknowledgements
 
-- [Rectangle](https://github.com/rxhanson/Rectangle) — the gold standard; HalfSnap is the opposite end of the spectrum
+- [Rectangle](https://github.com/rxhanson/Rectangle) — the gold standard; Snap Cat is the opposite end of the spectrum
 - Apple **Accessibility** and **Quartz Event Services** — the whole app is a thin shell over these
 
 <br />
@@ -173,7 +178,7 @@ Keep it small. New tile layouts, prefs panes, and updaters are usually out of sc
 ## 🚀 Ready?
 
 ```bash
-./build.sh && open -a HalfSnap
+./build.sh && open -a SnapCat
 ```
 
 Grant Accessibility. Press ⌘←. Done.

@@ -2,7 +2,7 @@ import Cocoa
 import ApplicationServices
 import Carbon.HIToolbox
 
-// HalfSnap — left/right halves + fill + minimize via Accessibility (Rectangle's core, ~nothing else)
+// Snap Cat — left/right halves + fill + minimize via Accessibility (Rectangle's core, ~nothing else)
 
 enum SnapAction { case left, right, fill, minimize }
 
@@ -226,7 +226,7 @@ final class HotKeys {
             userInfo: refcon
         ) else {
             // Needs Accessibility (and sometimes Input Monitoring)
-            NSLog("HalfSnap: CGEvent tap failed — grant Accessibility / Input Monitoring")
+            NSLog("Snap Cat: CGEvent tap failed — grant Accessibility / Input Monitoring")
             return
         }
         self.tap = tap
@@ -317,7 +317,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Accessibility Settings…", action: #selector(openAX), keyEquivalent: ""))
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "Quit HalfSnap", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit Snap Cat", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         item.menu = menu
         statusItem = item
         refreshShortcutsUI()
@@ -341,8 +341,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         shortcutsMenuItem?.state = on ? .on : .off
         statusItem?.button?.appearsDisabled = !on
         statusItem?.button?.toolTip = on
-            ? "HalfSnap — ⌘← left · ⌘→ right · ⌘↑ fill · ⌘↓ minimize"
-            : "HalfSnap — shortcuts off"
+            ? "Snap Cat — ⌘← left · ⌘→ right · ⌘↑ fill · ⌘↓ minimize"
+            : "Snap Cat — shortcuts off"
     }
 
     @objc private func openAX() {
