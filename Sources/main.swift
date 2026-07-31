@@ -9,8 +9,13 @@ enum Side { case left, right }
 // MARK: - AX
 
 enum AX {
-    static func ensureTrusted() -> Bool {
+    private static var didPrompt = false
+
+    /// `prompt` only once at launch — never on hotkey (spam).
+    static func ensureTrusted(prompt: Bool = false) -> Bool {
         if AXIsProcessTrusted() { return true }
+        guard prompt, !didPrompt else { return false }
+        didPrompt = true
         let opts = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
         AXIsProcessTrustedWithOptions(opts)
         return AXIsProcessTrusted()
@@ -143,7 +148,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = item
 
         hotKeys.install()
-        _ = AX.ensureTrusted()
+        _ = AX.ensureTrusted(prompt: true)
     }
 
     @objc private func snapLeft() { snap(.left) }

@@ -12,11 +12,13 @@ Left / right window halves. Accessibility only. No drag-snap, no prefs, no updat
 ## Run
 
 ```bash
-./build.sh
-open HalfSnap.app
+./build.sh          # builds + installs to /Applications/HalfSnap.app
+open -a HalfSnap
 ```
 
-Grant **Accessibility** when prompted (or menu → Accessibility Settings…).
+Grant **Accessibility** once for `/Applications/HalfSnap.app`, then quit and reopen HalfSnap.
+
+If the permission dialog keeps popping up: System Settings → Privacy & Security → Accessibility → remove every HalfSnap entry → re-enable the one from **Applications** → restart HalfSnap. (Ad-hoc rebuilds used to break this; builds are now signed with Apple Development so the grant sticks.)
 
 ## Stop
 
