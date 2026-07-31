@@ -66,6 +66,56 @@ enum AX {
             AXUIElementSetAttributeValue(el, kAXSizeAttribute as CFString, v)
         }
     }
+
+    /// True when frontmost focus is a text field / editor — pass ⌘←/→ through.
+    static func isTextInputFocused() -> Bool {
+        guard AXIsProcessTrusted(),
+              let app = NSWorkspace.shared.frontmostApplication else { return false }
+        let appEl = AXUIElementCreateApplication(app.processIdentifier)
+        var ref: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(appEl, kAXFocusedUIElementAttribute as CFString, &ref) == .success,
+              let ref else { return false }
+        return isTextInput(ref as! AXUIElement)
+    }
+
+    private static let textRoles: Set<String> = [
+        kAXTextFieldRole as String,
+        kAXTextAreaRole as String,
+        kAXComboBoxRole as String,
+        "AXSearchField",
+        "AXSecureTextField",
+    ]
+
+    private static func stringAttr(_ el: AXUIElement, _ attr: String) -> String? {
+        var ref: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(el, attr as CFString, &ref) == .success else { return nil }
+        return ref as? String
+    }
+
+    private static func isTextInput(_ el: AXUIElement) -> Bool {
+        let role = stringAttr(el, kAXRoleAttribute as String)
+        if let role, textRoles.contains(role) { return true }
+
+        let sub = stringAttr(el, kAXSubroleAttribute as String)
+        if sub == (kAXSearchFieldSubrole as String) || sub == "AXSecureTextField" { return true }
+
+        // contenteditable / some web & Electron fields
+        var editRef: CFTypeRef?
+        if AXUIElementCopyAttributeValue(el, "AXEditable" as CFString, &editRef) == .success,
+           let editable = editRef as? Bool, editable {
+            return true
+        }
+
+        // Caret present ⇒ text entry (covers many custom editors)
+        var rangeRef: CFTypeRef?
+        if AXUIElementCopyAttributeValue(el, kAXSelectedTextRangeAttribute as CFString, &rangeRef) == .success,
+           rangeRef != nil,
+           role != (kAXStaticTextRole as String),
+           role != (kAXButtonRole as String) {
+            return true
+        }
+        return false
+    }
 }
 
 // MARK: - Snap
@@ -96,30 +146,64 @@ func snap(_ side: Side) {
     AX.setFrame(win, rect)
 }
 
-// MARK: - Hotkeys (⌘← / ⌘→)
+// MARK: - Hotkeys (⌘← / ⌘→ via CGEvent tap — pass through in text fields)
 
 final class HotKeys {
-    private var leftRef: EventHotKeyRef?
-    private var rightRef: EventHotKeyRef?
-    private var handler: EventHandlerRef?
+    private var tap: CFMachPort?
+    private var source: CFRunLoopSource?
 
     func install() {
-        var eventType = EventTypeSpec(eventClass: OSType(kEventClassKeyboard), eventKind: UInt32(kEventHotKeyPressed))
-        let status = InstallEventHandler(GetApplicationEventTarget(), { (_, event, _) -> OSStatus in
-            var hk = EventHotKeyID()
-            GetEventParameter(event, EventParamName(kEventParamDirectObject), EventParamType(typeEventHotKeyID),
-                              nil, MemoryLayout<EventHotKeyID>.size, nil, &hk)
-            if hk.id == 1 { snap(.left) }
-            else if hk.id == 2 { snap(.right) }
-            return noErr
-        }, 1, &eventType, nil, &handler)
-        guard status == noErr else { return }
+        let mask = CGEventMask(1 << CGEventType.keyDown.rawValue)
+        let refcon = Unmanaged.passUnretained(self).toOpaque()
+        guard let tap = CGEvent.tapCreate(
+            tap: .cgSessionEventTap,
+            place: .headInsertEventTap,
+            options: .defaultTap,
+            eventsOfInterest: mask,
+            callback: { _, type, event, refcon in
+                guard let refcon else { return Unmanaged.passUnretained(event) }
+                let hk = Unmanaged<HotKeys>.fromOpaque(refcon).takeUnretainedValue()
+                return hk.handle(type: type, event: event)
+            },
+            userInfo: refcon
+        ) else {
+            // Needs Accessibility (and sometimes Input Monitoring)
+            NSLog("HalfSnap: CGEvent tap failed — grant Accessibility / Input Monitoring")
+            return
+        }
+        self.tap = tap
+        let src = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
+        self.source = src
+        CFRunLoopAddSource(CFRunLoopGetMain(), src, .commonModes)
+        CGEvent.tapEnable(tap: tap, enable: true)
+    }
 
-        let mods = UInt32(cmdKey)
-        let leftID = EventHotKeyID(signature: OSType(0x48414C46), id: 1) // 'HALF'
-        let rightID = EventHotKeyID(signature: OSType(0x48414C46), id: 2)
-        RegisterEventHotKey(UInt32(kVK_LeftArrow), mods, leftID, GetApplicationEventTarget(), 0, &leftRef)
-        RegisterEventHotKey(UInt32(kVK_RightArrow), mods, rightID, GetApplicationEventTarget(), 0, &rightRef)
+    private func handle(type: CGEventType, event: CGEvent) -> Unmanaged<CGEvent>? {
+        if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+            if let tap { CGEvent.tapEnable(tap: tap, enable: true) }
+            return Unmanaged.passUnretained(event)
+        }
+        guard type == .keyDown else { return Unmanaged.passUnretained(event) }
+
+        let key = event.getIntegerValueField(.keyboardEventKeycode)
+        guard key == Int64(kVK_LeftArrow) || key == Int64(kVK_RightArrow) else {
+            return Unmanaged.passUnretained(event)
+        }
+
+        // Pure ⌘ only (keep ⌘⇧← select-to-line-start, etc.)
+        let mods: CGEventFlags = [.maskCommand, .maskShift, .maskAlternate, .maskControl]
+        guard event.flags.intersection(mods) == .maskCommand else {
+            return Unmanaged.passUnretained(event)
+        }
+
+        // Let the app handle line-nav while typing
+        if AX.isTextInputFocused() {
+            return Unmanaged.passUnretained(event)
+        }
+
+        let side: Side = key == Int64(kVK_LeftArrow) ? .left : .right
+        DispatchQueue.main.async { snap(side) }
+        return nil // swallow
     }
 }
 
