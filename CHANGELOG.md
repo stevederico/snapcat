@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.1.0
+
+  Add Snapu macOS app icon
+  Bundle AppIcon.icns in build
+
 2.0.2
 
   Flat vector Snapu packaging style

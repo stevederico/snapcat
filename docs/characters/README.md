@@ -17,5 +17,8 @@ Flat **2D vector** commercial kyara — Kewpie / Peko / LINE-sticker energy.
 |------|-----|
 | **`snapu.jpg`** / **`snap-cat.jpg`** | Hero + name badge (flat vector) |
 | **`snapu-icon.jpg`** / **`snapu-sticker.jpg`** | Sticker / icon flat variant |
+| **`snapu-appicon.jpg`** | App icon art (no name badge) |
 | **`snapu-alt.jpg`** | Full window-grid body variant |
 | `archive-snapu-3d.jpg` | Old realistic render (do not use) |
+
+**System / Accessibility icon:** `Resources/AppIcon.icns` (copied into `SnapCat.app` by `./build.sh`).
