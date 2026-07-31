@@ -130,17 +130,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
 
     /// Drawn template (not title text) so we control size + true vertical center.
-    private static func statusIcon(side: CGFloat = 22) -> NSImage {
+    private static func statusIcon(side: CGFloat = 16) -> NSImage {
         let img = NSImage(size: NSSize(width: side, height: side), flipped: false) { bounds in
-            let r = bounds.insetBy(dx: 1.5, dy: 1.5)
+            let r = bounds.insetBy(dx: 1, dy: 1)
             NSColor.black.set()
-            let outline = NSBezierPath(roundedRect: r, xRadius: 2.5, yRadius: 2.5)
-            outline.lineWidth = 2
+            let outline = NSBezierPath(roundedRect: r, xRadius: 2, yRadius: 2)
+            outline.lineWidth = 1.5
             outline.stroke()
             let mid = NSBezierPath()
-            mid.move(to: NSPoint(x: r.midX, y: r.minY + 1))
-            mid.line(to: NSPoint(x: r.midX, y: r.maxY - 1))
-            mid.lineWidth = 2
+            mid.move(to: NSPoint(x: r.midX, y: r.minY + 0.5))
+            mid.line(to: NSPoint(x: r.midX, y: r.maxY - 0.5))
+            mid.lineWidth = 1.5
             mid.stroke()
             return true
         }
