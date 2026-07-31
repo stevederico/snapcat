@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+1.1.0
+
+  JP character marketing research brief
+  Verify brief structure script
+
 1.0.0
 
   World class open source README
