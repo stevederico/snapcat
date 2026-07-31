@@ -1,26 +1,21 @@
 # Snapu
 
-**Snapu** is the character.  
-**Snap Cat** is the product (the macOS app).
+**Snapu** = character · **Snap Cat** = product
+
+## Style (from JP packaging research)
+
+Flat **2D vector** commercial kyara — Kewpie / Peko / LINE-sticker energy.  
+**Not** 3D, plastic, glossy, or photoreal.
+
+- Bold outlines · solid fills · minimal/no gradients  
+- Big face · few features · reads at small size  
+- Name badge: **Snapu**
 
 ## Official assets
 
 | File | Use |
 |------|-----|
-| **`snapu.jpg`** | Hero with name badge — *Snapu* |
-| **`snap-cat.jpg`** | Same hero (product README) |
-| `snapu-icon.jpg` | Icon pose (no badge) |
-
-### Design
-- Mint-green window body + cream face grid  
-- Cat ears, eyes, whiskers, striped **tail**  
-- Soft cream **paws**  
-- Name: **Snapu**
-
-### Naming
-| | Name |
-|--|------|
-| Product / app | **Snap Cat** |
-| Character / mascot | **Snapu** |
-
-Tagline: *Snap Cat — windows that click into place.* (featuring Snapu)
+| **`snapu.jpg`** / **`snap-cat.jpg`** | Hero + name badge (flat vector) |
+| **`snapu-icon.jpg`** / **`snapu-sticker.jpg`** | Sticker / icon flat variant |
+| **`snapu-alt.jpg`** | Full window-grid body variant |
+| `archive-snapu-3d.jpg` | Old realistic render (do not use) |

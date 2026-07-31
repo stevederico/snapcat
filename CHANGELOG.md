@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.0.2
+
+  Flat vector Snapu packaging style
+  Drop 3D realistic mascot art
+
 2.0.1
 
   Name badge Snapu on mascot art
