@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.4.0
+
+  Rename GitHub repo snapcat
+  Update clone URLs description
+
 2.3.0
 
   Restore split menu bar icon

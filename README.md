@@ -20,8 +20,8 @@ If you want Rectangle with every tile preset — use Rectangle. If you want **�
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/stevederico/halfsnap.git
-cd halfsnap
+git clone https://github.com/stevederico/snapcat.git
+cd snapcat
 ./build.sh
 open -a SnapCat
 ```
@@ -29,8 +29,6 @@ open -a SnapCat
 1. Grant **Accessibility** when prompted (or System Settings → Privacy & Security → Accessibility → enable **Snap Cat**)
 2. Quit and reopen Snap Cat once so the grant sticks
 3. Press **⌘←** on any window
-
-> Formerly **HalfSnap**. Same hotkeys; new name and mascot. Bundle id is now `com.stevederico.snapcat` — re-grant Accessibility once after upgrading.
 
 <br />
 
@@ -111,7 +109,7 @@ Install somewhere else:
 SNAPCAT_INSTALL="$HOME/Applications" ./build.sh
 ```
 
-If the Accessibility dialog keeps popping up: System Settings → Privacy & Security → Accessibility → remove every **Snap Cat** / old **HalfSnap** entry → enable the one from **Applications** → restart Snap Cat.
+If the Accessibility dialog keeps popping up: System Settings → Privacy & Security → Accessibility → remove every **Snap Cat** entry → enable the one from **Applications** → restart Snap Cat.
 
 <br />
 
@@ -151,8 +149,8 @@ Heavy Accessibility tree walks are intentionally **not** done on the hotkey path
 ## 🤝 Contributing
 
 ```bash
-git clone https://github.com/stevederico/halfsnap.git
-cd halfsnap
+git clone https://github.com/stevederico/snapcat.git
+cd snapcat
 ./build.sh
 open -a SnapCat
 ```
@@ -164,7 +162,7 @@ Keep it small. New tile layouts, prefs panes, and updaters are usually out of sc
 ## 📬 Community & Support
 
 - **🐦 X**: [@stevederico](https://x.com/stevederico)
-- **🐛 Issues**: [GitHub Issues](https://github.com/stevederico/halfsnap/issues)
+- **🐛 Issues**: [GitHub Issues](https://github.com/stevederico/snapcat/issues)
 
 <br />
 
@@ -198,6 +196,6 @@ MIT License — use it however you want. See [LICENSE](LICENSE) for details.
     Built with ❤️ by <a href="https://github.com/stevederico">Steve Derico</a>
   </p>
   <p>
-    <a href="https://github.com/stevederico/halfsnap">⭐ Star on GitHub</a> — it helps!
+    <a href="https://github.com/stevederico/snapcat">⭐ Star on GitHub</a> — it helps!
   </p>
 </div>

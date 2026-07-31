@@ -32,18 +32,18 @@ for s in "Big face" "One product job" "Signature gesture" "menu bar"; do
 done
 pass "design checklist present"
 
-# Criterion 4 — HalfSnap options map to real product behaviors
-grep -q "HalfSnap-specific" "$BRIEF" || fail "missing HalfSnap options section"
+# Criterion 4 — product options map to real snap behaviors (brief written for HalfSnap era)
+grep -qE 'HalfSnap-specific|Snap Cat-specific|product.?specific' "$BRIEF" || fail "missing product options section"
 for s in "⌘←" "⌘→" "⌘↑" "⌘↓" "left half" "right half" "fill" "minimize" "menu bar"; do
-  grep -q "$s" "$BRIEF" || fail "HalfSnap options missing product fact: $s"
+  grep -q "$s" "$BRIEF" || fail "product options missing fact: $s"
 done
 # 3–5 named options
 count=0
-for s in "Half-kun" "Mado-chan" "Snappei" "Warikuma" "Docko"; do
+for s in "Half-kun" "Mado-chan" "Snappei" "Warikuma" "Docko" "Snapu"; do
   if grep -q "$s" "$BRIEF"; then count=$((count + 1)); fi
 done
 [[ "$count" -ge 3 ]] || fail "need ≥3 name options, found $count"
-pass "HalfSnap options map to product ($count names)"
+pass "product options map to behaviors ($count names)"
 
 # Rename recommendation
 grep -qi "Do not rename" "$BRIEF" || fail "missing rename recommendation"

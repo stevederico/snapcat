@@ -1,8 +1,9 @@
-# Japanese Product Character Marketing — Research Brief for HalfSnap
+# Japanese Product Character Marketing — Research Brief
 
 **Date:** 2026-07-31  
-**Scope:** How Japan sells products with cute characters (grocery, snacks, transit, regions) — and whether HalfSnap should rebrand into that style.  
-**Non-goals:** No rename, logo, or UI art shipped in this brief.
+**Scope:** How Japan sells products with cute characters (grocery, snacks, transit, regions) — and whether this window-snap app should rebrand into that style.  
+**Outcome (later):** Product renamed **Snap Cat** (`stevederico/snapcat`); character is **Snapu**. Brief text below still uses the historical name HalfSnap where written.  
+**Non-goals (at time of writing):** No rename, logo, or UI art shipped in this brief.
 
 ---
 
