@@ -1,25 +1,30 @@
-# HalfSnap character concepts
+# Snapu — official character
 
-## ✅ Official pick: Snapu (split)
+**Snapu** is HalfSnap’s brand kyara (Japanese product-mascot style).
 
-| File | Role |
-|------|------|
-| **`snapu.jpg`** | Canonical hero (same as split) |
-| **`snapu-split.jpg`** | Source design you chose |
+## Official assets
 
-**Snapu** = peach / sky-blue blob with a dashed center seam, cream face, red + blue eyes.  
-Maps to the product: left half · right half · fill · minimize.
+| File | Use |
+|------|-----|
+| **`snapu.jpg`** | Hero / marketing (Imagine polish from your pick) |
+| **`snapu-icon.jpg`** | Icon-friendly front pose |
+| **`snapu-source.jpg`** | Your chosen reference (source of truth) |
 
-Tagline direction: *Snapu — windows that click into place.*
+### Design
+- Mint-green **window pane** body + cream face grid  
+- Big sparkly eyes, rosy cheeks  
+- **Coral suction/magnet hands** (snap-to-edge)  
+- Cream limbs, mint socks, little boots  
 
-Product name can stay **HalfSnap** or lean into **Snapu** later — character is this face either way.
+**Personality:** tidy, strong little snap spirit — *click* windows into place.  
+**Tagline:** *Snapu — windows that click into place.*
 
-## Other explorations (not chosen)
+Product can stay **HalfSnap** or rebrand to **Snapu** later.
+
+## Not chosen
 
 | File | Notes |
 |------|--------|
-| `snapu-magnet.jpg` | Magnet hands — rejected |
-| `half-kun.jpg` | Earlier split-blob exploration |
-| `mado-chan.jpg` | Window cat |
-| `snappei.jpg` | Magnet candy spirit |
-| `docko.jpg` | Menu-bar gremlin |
+| `snapu-split.jpg` | Peach/blue split blob — earlier favorite, replaced |
+| `snapu-magnet.jpg` | Earlier magnet exploration |
+| `half-kun.jpg` / `mado-chan.jpg` / `snappei.jpg` / `docko.jpg` | Other concepts |
