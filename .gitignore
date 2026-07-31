@@ -1,4 +1,5 @@
 .build/
 HalfSnap.app/
+SnapCat.app/
 .swiftpm/
 *.xcodeproj
