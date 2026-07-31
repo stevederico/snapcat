@@ -1,6 +1,11 @@
 - multi-display snap polish
 - optional full-screen / maximize hotkey
 
+0.7.0
+
+  Stop Brave back forward leak
+  Drop slow AX tree walk
+
 0.6.0
 
   Fix snap in Brave pages

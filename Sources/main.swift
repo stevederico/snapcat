@@ -68,59 +68,19 @@ enum AX {
     }
 
     /// True when frontmost focus is a real text field / editor — pass ⌘←/→ through.
-    /// Terminals (Warp etc.) report one giant non-editable AXTextArea; those still snap.
+    /// Fast path only: tree walks time out the CGEvent tap → keys leak (Brave back/forward).
     static func isTextInputFocused() -> Bool {
         guard AXIsProcessTrusted(),
               let app = NSWorkspace.shared.frontmostApplication else { return false }
         if isTerminalApp(app) { return false }
-        guard let el = focusedElement(of: app) else { return false }
-        return isTextInput(el)
-    }
-
-    /// App-level focus often returns AXWebArea in Chromium; walk for a real focused field when needed.
-    private static func focusedElement(of app: NSRunningApplication) -> AXUIElement? {
         let appEl = AXUIElementCreateApplication(app.processIdentifier)
         var ref: CFTypeRef?
-        if AXUIElementCopyAttributeValue(appEl, kAXFocusedUIElementAttribute as CFString, &ref) == .success,
-           let ref {
-            let el = ref as! AXUIElement
-            let role = stringAttr(el, kAXRoleAttribute as String)
-            // Prefer real form fields over the page shell
-            if role != "AXWebArea" && role != (kAXScrollAreaRole as String) {
-                return el
-            }
+        guard AXUIElementCopyAttributeValue(appEl, kAXFocusedUIElementAttribute as CFString, &ref) == .success,
+              let ref else {
+            // No focus info → snap (don't walk; prefer window management over history nav)
+            return false
         }
-        var winRef: CFTypeRef?
-        guard AXUIElementCopyAttributeValue(appEl, kAXFocusedWindowAttribute as CFString, &winRef) == .success,
-              let winRef else { return nil }
-        var budget = 400
-        return findFocusedDescendant(winRef as! AXUIElement, depth: 0, budget: &budget)
-    }
-
-    private static func findFocusedDescendant(_ el: AXUIElement, depth: Int, budget: inout Int) -> AXUIElement? {
-        if depth > 16 || budget <= 0 { return nil }
-        budget -= 1
-        var focusedRef: CFTypeRef?
-        let selfFocused = AXUIElementCopyAttributeValue(el, kAXFocusedAttribute as CFString, &focusedRef) == .success
-            && (focusedRef as? Bool == true)
-        // AXWebArea often claims focus for the whole page — look under it for form fields
-        if selfFocused {
-            let role = stringAttr(el, kAXRoleAttribute as String)
-            if role != "AXWebArea" && role != (kAXScrollAreaRole as String) {
-                return el
-            }
-        }
-        var kids: CFTypeRef?
-        guard AXUIElementCopyAttributeValue(el, kAXChildrenAttribute as CFString, &kids) == .success,
-              let kids = kids as? [AXUIElement] else {
-            return selfFocused ? el : nil
-        }
-        for child in kids {
-            if let hit = findFocusedDescendant(child, depth: depth + 1, budget: &budget) {
-                return hit
-            }
-        }
-        return selfFocused ? el : nil
+        return isTextInput(ref as! AXUIElement)
     }
 
     // yagni: static list; add bundle id if another terminal never snaps
@@ -280,14 +240,14 @@ final class HotKeys {
             return Unmanaged.passUnretained(event)
         }
 
-        // Let the app handle line-nav while typing
+        // Let the app handle line-nav while typing (fast AX only)
         if AX.isTextInputFocused() {
             return Unmanaged.passUnretained(event)
         }
 
         let side: Side = key == Int64(kVK_LeftArrow) ? .left : .right
         DispatchQueue.main.async { snap(side) }
-        return nil // swallow
+        return nil // swallow — prevents Brave ⌘←/→ history
     }
 }
 

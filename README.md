@@ -9,7 +9,7 @@ Left / right window halves. Accessibility only. No drag-snap, no prefs, no updat
 | `⌘←` | Left half |
 | `⌘→` | Right half |
 
-Disabled while a text field / editor is focused (line start/end still works), including website forms in Chromium browsers. Terminals (Warp, etc.) always snap — their UI is one big text view.
+Disabled while a native text field / editor is focused (line start/end still works). Prefer snap over browser history when focus is ambiguous. Terminals (Warp, etc.) always snap.
 
 Menu bar → **Keyboard Shortcuts** toggles ⌘←/→ (persists). Menu Snap Left/Right still work when off.
 
