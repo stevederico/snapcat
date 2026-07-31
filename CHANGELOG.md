@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.3.0
+
+  Restore split menu bar icon
+  Keep Snapu app icon only
+
 2.2.0
 
   Crop center Snapu for all icons
