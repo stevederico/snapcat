@@ -9,7 +9,7 @@ Left / right window halves. Accessibility only. No drag-snap, no prefs, no updat
 | `⌘←` | Left half |
 | `⌘→` | Right half |
 
-Disabled while a text field / editor is focused (line start/end still works).
+Disabled while a text field / editor is focused (line start/end still works). Terminals (Warp, etc.) always snap — their UI is one big text view.
 
 ## Run
 

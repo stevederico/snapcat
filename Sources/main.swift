@@ -67,10 +67,12 @@ enum AX {
         }
     }
 
-    /// True when frontmost focus is a text field / editor — pass ⌘←/→ through.
+    /// True when frontmost focus is a real text field / editor — pass ⌘←/→ through.
+    /// Terminals (Warp etc.) report one giant non-editable AXTextArea; those still snap.
     static func isTextInputFocused() -> Bool {
         guard AXIsProcessTrusted(),
               let app = NSWorkspace.shared.frontmostApplication else { return false }
+        if isTerminalApp(app) { return false }
         let appEl = AXUIElementCreateApplication(app.processIdentifier)
         var ref: CFTypeRef?
         guard AXUIElementCopyAttributeValue(appEl, kAXFocusedUIElementAttribute as CFString, &ref) == .success,
@@ -78,10 +80,26 @@ enum AX {
         return isTextInput(ref as! AXUIElement)
     }
 
-    private static let textRoles: Set<String> = [
+    // yagni: static list; add bundle id if another terminal never snaps
+    private static let terminalBundleIDs: Set<String> = [
+        "dev.warp.Warp-Stable",
+        "dev.warp.Warp",
+        "com.apple.Terminal",
+        "com.googlecode.iterm2",
+        "net.kovidgoyal.kitty",
+        "com.github.wez.wezterm",
+        "io.alacritty",
+        "com.mitchellh.ghostty",
+    ]
+
+    private static func isTerminalApp(_ app: NSRunningApplication) -> Bool {
+        guard let id = app.bundleIdentifier else { return false }
+        if terminalBundleIDs.contains(id) { return true }
+        return id.hasPrefix("dev.warp.")
+    }
+
+    private static let fieldRoles: Set<String> = [
         kAXTextFieldRole as String,
-        kAXTextAreaRole as String,
-        kAXComboBoxRole as String,
         "AXSearchField",
         "AXSecureTextField",
     ]
@@ -92,24 +110,37 @@ enum AX {
         return ref as? String
     }
 
+    private static func hasCaret(_ el: AXUIElement) -> Bool {
+        var rangeRef: CFTypeRef?
+        return AXUIElementCopyAttributeValue(el, kAXSelectedTextRangeAttribute as CFString, &rangeRef) == .success
+            && rangeRef != nil
+    }
+
+    private static func valueIsSettable(_ el: AXUIElement) -> Bool {
+        var settable = DarwinBoolean(false)
+        return AXUIElementIsAttributeSettable(el, kAXValueAttribute as CFString, &settable) == .success
+            && settable.boolValue
+    }
+
     private static func isTextInput(_ el: AXUIElement) -> Bool {
         let role = stringAttr(el, kAXRoleAttribute as String)
-        if let role, textRoles.contains(role) { return true }
+        if let role, fieldRoles.contains(role) { return true }
 
         let sub = stringAttr(el, kAXSubroleAttribute as String)
         if sub == (kAXSearchFieldSubrole as String) || sub == "AXSecureTextField" { return true }
 
-        // contenteditable / some web & Electron fields
         var editRef: CFTypeRef?
         if AXUIElementCopyAttributeValue(el, "AXEditable" as CFString, &editRef) == .success,
            let editable = editRef as? Bool, editable {
             return true
         }
 
-        // Caret present ⇒ text entry (covers many custom editors)
-        var rangeRef: CFTypeRef?
-        if AXUIElementCopyAttributeValue(el, kAXSelectedTextRangeAttribute as CFString, &rangeRef) == .success,
-           rangeRef != nil,
+        // AXTextArea / combo only when actually editable (Warp canvas is not)
+        if role == (kAXTextAreaRole as String) || role == (kAXComboBoxRole as String) {
+            return valueIsSettable(el) || hasCaret(el)
+        }
+
+        if hasCaret(el),
            role != (kAXStaticTextRole as String),
            role != (kAXButtonRole as String) {
             return true
