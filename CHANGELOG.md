@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+1.2.0
+
+  Four JP brand character concepts
+  Character pack under docs/characters
+
 1.1.0
 
   JP character marketing research brief
