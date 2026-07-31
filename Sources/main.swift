@@ -277,16 +277,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private var shortcutsMenuItem: NSMenuItem?
 
-    /// Snapu face from app bundle (Resources/StatusBarIcon.png); fallback drawn split-rect.
-    private static func statusIcon() -> NSImage {
-        if let url = Bundle.main.url(forResource: "StatusBarIcon", withExtension: "png"),
-           let img = NSImage(contentsOf: url) {
-            img.isTemplate = false
-            img.size = NSSize(width: 18, height: 18)
-            return img
-        }
-        // fallback if Resources missing
-        let side: CGFloat = 16
+    /// Drawn template split-rect (menu bar); app icon stays Snapu.
+    private static func statusIcon(side: CGFloat = 16) -> NSImage {
         let img = NSImage(size: NSSize(width: side, height: side), flipped: false) { bounds in
             let r = bounds.insetBy(dx: 1, dy: 1)
             NSColor.black.set()
@@ -311,7 +303,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let btn = item.button {
             btn.image = Self.statusIcon()
             btn.imagePosition = .imageOnly
-            btn.imageScaling = .scaleProportionallyDown
+            btn.imageScaling = .scaleNone
         }
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "Snap Left  ⌘←", action: #selector(snapLeft), keyEquivalent: ""))
