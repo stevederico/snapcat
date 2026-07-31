@@ -6,8 +6,8 @@ Left / right window halves. Accessibility only. No drag-snap, no prefs, no updat
 
 | Shortcut | Action |
 |----------|--------|
-| `⌘⌥←` | Left half |
-| `⌘⌥→` | Right half |
+| `⌥←` | Left half |
+| `⌥→` | Right half |
 
 ## Run
 
