@@ -11,6 +11,8 @@ Left / right window halves. Accessibility only. No drag-snap, no prefs, no updat
 
 Disabled while a text field / editor is focused (line start/end still works), including website forms in Chromium browsers. Terminals (Warp, etc.) always snap — their UI is one big text view.
 
+Menu bar → **Keyboard Shortcuts** toggles ⌘←/→ (persists). Menu Snap Left/Right still work when off.
+
 ## Run
 
 ```bash

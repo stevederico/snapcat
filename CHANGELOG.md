@@ -1,6 +1,11 @@
 - multi-display snap polish
 - optional full-screen / maximize hotkey
 
+0.5.0
+
+  Toggle keyboard shortcuts menu
+  Persist shortcuts enabled state
+
 0.4.0
 
   Detect browser form focus

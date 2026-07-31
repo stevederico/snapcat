@@ -214,6 +214,11 @@ final class HotKeys {
     private var tap: CFMachPort?
     private var source: CFRunLoopSource?
 
+    /// Global ⌘←/→ snap. Menu Snap Left/Right always work.
+    var isEnabled: Bool = UserDefaults.standard.object(forKey: "shortcutsEnabled") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(isEnabled, forKey: "shortcutsEnabled") }
+    }
+
     func install() {
         let mask = CGEventMask(1 << CGEventType.keyDown.rawValue)
         let refcon = Unmanaged.passUnretained(self).toOpaque()
@@ -246,6 +251,7 @@ final class HotKeys {
             return Unmanaged.passUnretained(event)
         }
         guard type == .keyDown else { return Unmanaged.passUnretained(event) }
+        guard isEnabled else { return Unmanaged.passUnretained(event) }
 
         let key = event.getIntegerValueField(.keyboardEventKeycode)
         guard key == Int64(kVK_LeftArrow) || key == Int64(kVK_RightArrow) else {
@@ -274,6 +280,7 @@ final class HotKeys {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let hotKeys = HotKeys()
     private var statusItem: NSStatusItem?
+    private var shortcutsMenuItem: NSMenuItem?
 
     /// Drawn template (not title text) so we control size + true vertical center.
     private static func statusIcon(side: CGFloat = 16) -> NSImage {
@@ -302,17 +309,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             btn.image = Self.statusIcon()
             btn.imagePosition = .imageOnly
             btn.imageScaling = .scaleNone
-            btn.toolTip = "HalfSnap — ⌘← left · ⌘→ right"
         }
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "Snap Left  ⌘←", action: #selector(snapLeft), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "Snap Right  ⌘→", action: #selector(snapRight), keyEquivalent: ""))
+        menu.addItem(.separator())
+        let shortcuts = NSMenuItem(title: "Keyboard Shortcuts", action: #selector(toggleShortcuts), keyEquivalent: "")
+        menu.addItem(shortcuts)
+        shortcutsMenuItem = shortcuts
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Accessibility Settings…", action: #selector(openAX), keyEquivalent: ""))
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Quit HalfSnap", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         item.menu = menu
         statusItem = item
+        refreshShortcutsUI()
 
         hotKeys.install()
         _ = AX.ensureTrusted(prompt: true)
@@ -320,6 +331,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func snapLeft() { snap(.left) }
     @objc private func snapRight() { snap(.right) }
+
+    @objc private func toggleShortcuts() {
+        hotKeys.isEnabled.toggle()
+        refreshShortcutsUI()
+    }
+
+    private func refreshShortcutsUI() {
+        let on = hotKeys.isEnabled
+        shortcutsMenuItem?.state = on ? .on : .off
+        statusItem?.button?.appearsDisabled = !on
+        statusItem?.button?.toolTip = on
+            ? "HalfSnap — ⌘← left · ⌘→ right"
+            : "HalfSnap — shortcuts off"
+    }
 
     @objc private func openAX() {
         if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
