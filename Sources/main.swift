@@ -129,14 +129,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let hotKeys = HotKeys()
     private var statusItem: NSStatusItem?
 
+    /// Drawn template (not title text) so we control size + true vertical center.
+    private static func statusIcon(side: CGFloat = 22) -> NSImage {
+        let img = NSImage(size: NSSize(width: side, height: side), flipped: false) { bounds in
+            let r = bounds.insetBy(dx: 1.5, dy: 1.5)
+            NSColor.black.set()
+            let outline = NSBezierPath(roundedRect: r, xRadius: 2.5, yRadius: 2.5)
+            outline.lineWidth = 2
+            outline.stroke()
+            let mid = NSBezierPath()
+            mid.move(to: NSPoint(x: r.midX, y: r.minY + 1))
+            mid.line(to: NSPoint(x: r.midX, y: r.maxY - 1))
+            mid.lineWidth = 2
+            mid.stroke()
+            return true
+        }
+        img.isTemplate = true
+        return img
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
 
-        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let btn = item.button {
-            // Menu bar caps ~22pt; 18 fills it (default title font is ~13)
-            btn.font = .systemFont(ofSize: 18, weight: .medium)
-            btn.title = "◫"
+            btn.image = Self.statusIcon()
+            btn.imagePosition = .imageOnly
+            btn.imageScaling = .scaleNone
             btn.toolTip = "HalfSnap — ⌘← left · ⌘→ right"
         }
         let menu = NSMenu()
