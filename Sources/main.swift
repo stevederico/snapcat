@@ -134,6 +134,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let btn = item.button {
+            // Menu bar caps ~22pt; 18 fills it (default title font is ~13)
+            btn.font = .systemFont(ofSize: 18, weight: .medium)
             btn.title = "◫"
             btn.toolTip = "HalfSnap — ⌘← left · ⌘→ right"
         }
