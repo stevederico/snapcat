@@ -1,18 +1,26 @@
-# Snap Cat — official character
+# Snapu
 
-Product: **Snap Cat**  
-Character: **Snapu** (the cat)
+**Snapu** is the character.  
+**Snap Cat** is the product (the macOS app).
 
 ## Official assets
 
 | File | Use |
 |------|-----|
-| **`snap-cat.jpg`** / **`snapu.jpg`** | Hero — mint window cat, paws, tail |
-| **`snap-cat-icon.jpg`** / **`snapu-icon.jpg`** | Icon pose |
+| **`snapu.jpg`** | Hero with name badge — *Snapu* |
+| **`snap-cat.jpg`** | Same hero (product README) |
+| `snapu-icon.jpg` | Icon pose (no badge) |
 
 ### Design
-- Mint-green **window** body + cream face grid  
-- **Cat** ears, eyes, whiskers, **tail**  
-- Soft cream **paws** (no magnet circles)  
+- Mint-green window body + cream face grid  
+- Cat ears, eyes, whiskers, striped **tail**  
+- Soft cream **paws**  
+- Name: **Snapu**
 
-**Tagline:** *Snap Cat — windows that click into place.*
+### Naming
+| | Name |
+|--|------|
+| Product / app | **Snap Cat** |
+| Character / mascot | **Snapu** |
+
+Tagline: *Snap Cat — windows that click into place.* (featuring Snapu)

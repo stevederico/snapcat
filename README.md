@@ -1,17 +1,17 @@
 <div align="center">
-  <img src="docs/characters/snap-cat.jpg" width="220" alt="Snapu — Snap Cat mascot">
+  <img src="docs/characters/snapu.jpg" width="220" alt="Snapu">
   <h1 style="border-bottom: none; margin-bottom: 0;">Snap Cat</h1>
   <h3 style="margin-top: 0; font-weight: normal;">
     left / right / fill / minimize for macos — one file, zero bloat
   </h3>
-  <p><em>windows that click into place</em></p>
+  <p><em>windows that click into place</em> · starring <strong>Snapu</strong></p>
 </div>
 
 <br />
 
 **Snap Cat** is the smallest useful window manager for macOS. Four shortcuts. A menu bar icon. Accessibility APIs. No drag-to-snap, no preference window, no updater, no account.
 
-Meet **Snapu** — the little window cat who snaps panes into place.
+The mascot is **Snapu** — the little window cat who snaps panes into place.
 
 If you want Rectangle with every tile preset — use Rectangle. If you want **⌘ arrows and nothing else** — use this.
 

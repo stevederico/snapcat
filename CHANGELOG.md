@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.0.1
+
+  Name badge Snapu on mascot art
+  Clarify Snapu vs Snap Cat
+
 2.0.0
 
   Rebrand product to Snap Cat
