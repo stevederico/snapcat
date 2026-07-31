@@ -9,6 +9,7 @@ Left / right window halves + fill. Accessibility only. No drag-snap, no prefs, n
 | `⌘←` | Left half |
 | `⌘→` | Right half |
 | `⌘↑` | Fill screen (usable area, not Full Screen) |
+| `⌘↓` | Minimize window |
 
 Disabled while a native text field / editor is focused (line start/end still works). Prefer snap over browser history when focus is ambiguous. Terminals (Warp, etc.) always snap.
 

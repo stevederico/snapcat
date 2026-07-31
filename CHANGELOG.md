@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+0.9.0
+
+  Add minimize on Cmd-Down
+  Menu Minimize action
+
 0.8.0
 
   Add fill screen on Cmd-Up

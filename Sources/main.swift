@@ -2,9 +2,9 @@ import Cocoa
 import ApplicationServices
 import Carbon.HIToolbox
 
-// HalfSnap — left/right halves + fill via Accessibility (Rectangle's core, ~nothing else)
+// HalfSnap — left/right halves + fill + minimize via Accessibility (Rectangle's core, ~nothing else)
 
-enum SnapAction { case left, right, fill }
+enum SnapAction { case left, right, fill, minimize }
 
 // MARK: - AX
 
@@ -65,6 +65,10 @@ enum AX {
         if let v = AXValueCreate(.cgSize, &size) {
             AXUIElementSetAttributeValue(el, kAXSizeAttribute as CFString, v)
         }
+    }
+
+    static func setMinimized(_ el: AXUIElement, _ minimized: Bool) {
+        AXUIElementSetAttributeValue(el, kAXMinimizedAttribute as CFString, minimized ? kCFBooleanTrue : kCFBooleanFalse)
     }
 
     /// True when frontmost focus is a real text field / editor — pass ⌘←/→ through.
@@ -170,7 +174,15 @@ func snap(_ action: SnapAction) {
         NSSound.beep()
         return
     }
-    guard let win = AX.frontWindow(), let axFrame = AX.frame(win) else {
+    guard let win = AX.frontWindow() else {
+        NSSound.beep()
+        return
+    }
+    if action == .minimize {
+        AX.setMinimized(win, true)
+        return
+    }
+    guard let axFrame = AX.frame(win) else {
         NSSound.beep()
         return
     }
@@ -179,14 +191,15 @@ func snap(_ action: SnapAction) {
     let w = floor(vf.width / 2)
     // fill = all usable space (menu bar / Dock excluded) — not macOS Full Screen
     let rect: CGRect = switch action {
-    case .left:  CGRect(x: vf.minX, y: vf.minY, width: w, height: vf.height)
-    case .right: CGRect(x: vf.maxX - w, y: vf.minY, width: w, height: vf.height)
-    case .fill:  vf
+    case .left:     CGRect(x: vf.minX, y: vf.minY, width: w, height: vf.height)
+    case .right:    CGRect(x: vf.maxX - w, y: vf.minY, width: w, height: vf.height)
+    case .fill:     vf
+    case .minimize: preconditionFailure("handled above")
     }
     AX.setFrame(win, rect)
 }
 
-// MARK: - Hotkeys (⌘← / ⌘→ / ⌘↑ via CGEvent tap — pass through in text fields)
+// MARK: - Hotkeys (⌘ arrows via CGEvent tap — pass through in text fields)
 
 final class HotKeys {
     private var tap: CFMachPort?
@@ -236,6 +249,7 @@ final class HotKeys {
         case Int64(kVK_LeftArrow):  .left
         case Int64(kVK_RightArrow): .right
         case Int64(kVK_UpArrow):    .fill
+        case Int64(kVK_DownArrow):  .minimize
         default: nil
         }
         guard let action else { return Unmanaged.passUnretained(event) }
@@ -295,6 +309,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: "Snap Left  ⌘←", action: #selector(snapLeft), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "Snap Right  ⌘→", action: #selector(snapRight), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "Fill Screen  ⌘↑", action: #selector(snapFill), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Minimize  ⌘↓", action: #selector(snapMinimize), keyEquivalent: ""))
         menu.addItem(.separator())
         let shortcuts = NSMenuItem(title: "Keyboard Shortcuts", action: #selector(toggleShortcuts), keyEquivalent: "")
         menu.addItem(shortcuts)
@@ -314,6 +329,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func snapLeft() { snap(.left) }
     @objc private func snapRight() { snap(.right) }
     @objc private func snapFill() { snap(.fill) }
+    @objc private func snapMinimize() { snap(.minimize) }
 
     @objc private func toggleShortcuts() {
         hotKeys.isEnabled.toggle()
@@ -325,7 +341,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         shortcutsMenuItem?.state = on ? .on : .off
         statusItem?.button?.appearsDisabled = !on
         statusItem?.button?.toolTip = on
-            ? "HalfSnap — ⌘← left · ⌘→ right · ⌘↑ fill"
+            ? "HalfSnap — ⌘← left · ⌘→ right · ⌘↑ fill · ⌘↓ minimize"
             : "HalfSnap — shortcuts off"
     }
 
