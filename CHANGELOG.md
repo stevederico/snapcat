@@ -1,6 +1,11 @@
 - multi-display snap polish
 - optional full-screen / maximize hotkey
 
+0.6.0
+
+  Fix snap in Brave pages
+  Ignore AXWebArea focus
+
 0.5.0
 
   Toggle keyboard shortcuts menu

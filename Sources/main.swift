@@ -77,13 +77,18 @@ enum AX {
         return isTextInput(el)
     }
 
-    /// App-level focus fails in Chromium (Brave/Chrome) for web forms — walk the window for `AXFocused`.
+    /// App-level focus often returns AXWebArea in Chromium; walk for a real focused field when needed.
     private static func focusedElement(of app: NSRunningApplication) -> AXUIElement? {
         let appEl = AXUIElementCreateApplication(app.processIdentifier)
         var ref: CFTypeRef?
         if AXUIElementCopyAttributeValue(appEl, kAXFocusedUIElementAttribute as CFString, &ref) == .success,
            let ref {
-            return (ref as! AXUIElement)
+            let el = ref as! AXUIElement
+            let role = stringAttr(el, kAXRoleAttribute as String)
+            // Prefer real form fields over the page shell
+            if role != "AXWebArea" && role != (kAXScrollAreaRole as String) {
+                return el
+            }
         }
         var winRef: CFTypeRef?
         guard AXUIElementCopyAttributeValue(appEl, kAXFocusedWindowAttribute as CFString, &winRef) == .success,
@@ -96,19 +101,26 @@ enum AX {
         if depth > 16 || budget <= 0 { return nil }
         budget -= 1
         var focusedRef: CFTypeRef?
-        if AXUIElementCopyAttributeValue(el, kAXFocusedAttribute as CFString, &focusedRef) == .success,
-           let focused = focusedRef as? Bool, focused {
-            return el
+        let selfFocused = AXUIElementCopyAttributeValue(el, kAXFocusedAttribute as CFString, &focusedRef) == .success
+            && (focusedRef as? Bool == true)
+        // AXWebArea often claims focus for the whole page — look under it for form fields
+        if selfFocused {
+            let role = stringAttr(el, kAXRoleAttribute as String)
+            if role != "AXWebArea" && role != (kAXScrollAreaRole as String) {
+                return el
+            }
         }
         var kids: CFTypeRef?
         guard AXUIElementCopyAttributeValue(el, kAXChildrenAttribute as CFString, &kids) == .success,
-              let kids = kids as? [AXUIElement] else { return nil }
+              let kids = kids as? [AXUIElement] else {
+            return selfFocused ? el : nil
+        }
         for child in kids {
             if let hit = findFocusedDescendant(child, depth: depth + 1, budget: &budget) {
                 return hit
             }
         }
-        return nil
+        return selfFocused ? el : nil
     }
 
     // yagni: static list; add bundle id if another terminal never snaps
@@ -155,6 +167,9 @@ enum AX {
 
     private static func isTextInput(_ el: AXUIElement) -> Bool {
         let role = stringAttr(el, kAXRoleAttribute as String)
+        // Chromium: page body is focused AXWebArea with a phantom caret — still snap
+        if role == "AXWebArea" || role == (kAXScrollAreaRole as String) { return false }
+
         if let role, fieldRoles.contains(role) { return true }
 
         let sub = stringAttr(el, kAXSubroleAttribute as String)
@@ -173,7 +188,8 @@ enum AX {
 
         if hasCaret(el),
            role != (kAXStaticTextRole as String),
-           role != (kAXButtonRole as String) {
+           role != (kAXButtonRole as String),
+           role != (kAXGroupRole as String) {
             return true
         }
         return false
