@@ -53,8 +53,8 @@ Not macOS Full Screen. Fill uses the screen's **visible frame** so the window st
 - **Minimize** via Accessibility, same as the yellow button
 
 ### 🧠 **Smart Pass-Through**
-- **Typing wins** — in a real text field, ⌘← / ⌘→ stay "line start / line end"
-- **Browsers snap** — page chrome is not treated as a text field (no accidental history back/forward when the tap is healthy)
+- **Typing wins** — in a real text field (non-browser apps), ⌘← / ⌘→ stay "line start / line end"
+- **Browsers always snap** — Brave, Chrome, Safari, Arc, etc. never pass through (sites park focus in sidebars like x.com Grok)
 - **Terminals snap** — Warp, Terminal, iTerm, and friends always get window actions (their UI is one big text view)
 
 ### ☰ **Menu Bar App**

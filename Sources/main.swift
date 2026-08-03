@@ -76,7 +76,8 @@ enum AX {
     static func isTextInputFocused() -> Bool {
         guard AXIsProcessTrusted(),
               let app = NSWorkspace.shared.frontmostApplication else { return false }
-        if isTerminalApp(app) { return false }
+        // Terminals + browsers always snap — sites park focus in sidebars (x.com "Ask Grok", etc.)
+        if isTerminalApp(app) || isBrowserApp(app) { return false }
         let appEl = AXUIElementCreateApplication(app.processIdentifier)
         var ref: CFTypeRef?
         guard AXUIElementCopyAttributeValue(appEl, kAXFocusedUIElementAttribute as CFString, &ref) == .success,
@@ -103,6 +104,30 @@ enum AX {
         guard let id = app.bundleIdentifier else { return false }
         if terminalBundleIDs.contains(id) { return true }
         return id.hasPrefix("dev.warp.")
+    }
+
+    // yagni: static list; add bundle id if another browser never snaps
+    private static let browserBundleIDs: Set<String> = [
+        "com.brave.Browser",
+        "com.brave.Browser.beta",
+        "com.brave.Browser.nightly",
+        "com.google.Chrome",
+        "com.google.Chrome.canary",
+        "com.apple.Safari",
+        "company.thebrowser.Browser",
+        "com.microsoft.edgemac",
+        "org.mozilla.firefox",
+        "org.mozilla.firefoxdeveloperedition",
+        "com.operasoftware.Opera",
+        "com.vivaldi.Vivaldi",
+        "app.zen-browser.zen",
+    ]
+
+    private static func isBrowserApp(_ app: NSRunningApplication) -> Bool {
+        guard let id = app.bundleIdentifier else { return false }
+        if browserBundleIDs.contains(id) { return true }
+        if id.hasPrefix("com.brave.") || id.hasPrefix("com.google.Chrome") { return true }
+        return false
     }
 
     private static let fieldRoles: Set<String> = [

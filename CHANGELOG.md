@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.5.0
+
+  Always snap in browsers
+  Fix x.com focus steal
+
 2.4.0
 
   Rename GitHub repo snapcat
