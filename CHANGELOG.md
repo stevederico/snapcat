@@ -1,5 +1,9 @@
 - multi-display snap polish
 
+2.7.0
+
+  Fix icon venv with uv
+
 2.6.0
 
   Show version in menu

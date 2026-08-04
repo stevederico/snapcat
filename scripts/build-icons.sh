@@ -4,9 +4,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 VENV="${ICON_VENV:-.icon-venv}"
+# uv-managed python3 symlinks break `python3 -m venv` (stdlib home) — use uv
 if [[ ! -x "$VENV/bin/python" ]]; then
-  python3 -m venv "$VENV"
-  "$VENV/bin/pip" install -q pillow
+  command -v uv >/dev/null || { echo "error: uv required for icon venv" >&2; exit 1; }
+  uv venv "$VENV"
+  uv pip install --python "$VENV" -q pillow
 fi
 
 "$VENV/bin/python" << 'PY'
