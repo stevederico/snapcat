@@ -7,6 +7,18 @@ cd "$(dirname "$0")"
 SIGN_ID="${SNAPCAT_SIGN_ID:-${HALFSNAP_SIGN_ID:-Apple Development: Stephen Derico (RGS2F76K98)}}"
 INSTALL_DIR="${SNAPCAT_INSTALL:-${HALFSNAP_INSTALL:-/Applications}}"
 BUNDLE_ID="com.stevederico.snapcat"
+# Prefer SNAPCAT_VERSION, else CHANGELOG head (bumped pre-tag), else latest git tag
+VERSION="${SNAPCAT_VERSION:-}"
+if [[ -z "$VERSION" && -f CHANGELOG.md ]]; then
+  VERSION="$(grep -E '^[0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md | head -1 || true)"
+fi
+if [[ -z "$VERSION" ]]; then
+  VERSION="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+fi
+VERSION="${VERSION:-0.0.0}"
+# Build number = count of version tags (stable-ish across rebuilds of same tree)
+BUILD_NUM="$(git tag | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | wc -l | tr -d ' ')"
+BUILD_NUM="${BUILD_NUM:-1}"
 
 # Rebuild icons from docs/characters/snapu.jpg when present
 if [[ -f docs/characters/snapu.jpg ]]; then
@@ -36,8 +48,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>CFBundleDisplayName</key><string>Snap Cat</string>
   <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>2.4.0</string>
-  <key>CFBundleVersion</key><string>26</string>
+  <key>CFBundleShortVersionString</key><string>${VERSION}</string>
+  <key>CFBundleVersion</key><string>${BUILD_NUM}</string>
   <key>LSMinimumSystemVersion</key><string>13.0</string>
   <key>LSUIElement</key><true/>
   <key>NSHighResolutionCapable</key><true/>

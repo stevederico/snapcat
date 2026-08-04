@@ -342,6 +342,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Accessibility Settings…", action: #selector(openAX), keyEquivalent: ""))
         menu.addItem(.separator())
+        let ver = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
+        let versionItem = NSMenuItem(title: "Version \(ver)", action: nil, keyEquivalent: "")
+        versionItem.isEnabled = false
+        menu.addItem(versionItem)
         menu.addItem(NSMenuItem(title: "Quit Snap Cat", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         item.menu = menu
         statusItem = item

@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.6.0
+
+  Show version in menu
+  Stamp version from git
+
 2.5.0
 
   Always snap in browsers
