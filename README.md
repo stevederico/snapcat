@@ -9,11 +9,11 @@
 
 <br />
 
-**Snap Cat** is the smallest useful window manager for macOS. Four shortcuts. A menu bar icon. Accessibility APIs. No drag-to-snap, no preference window, no updater, no account.
+**Snap Cat** is the smallest useful window manager for macOS. Four shortcuts. A menu bar icon. Accessibility APIs. No drag-to-snap, no preference pane, no updater, no account.
 
 The mascot is **Snapu** — the little window cat who snaps panes into place.
 
-If you want Rectangle with every tile preset — use Rectangle. If you want **⌘ arrows and nothing else** — use this.
+If you want Rectangle with every tile preset — use Rectangle. If you want **modifier + arrows and nothing else** — use this.
 
 <br />
 
@@ -28,18 +28,20 @@ open -a SnapCat
 
 1. Grant **Accessibility** when prompted (or System Settings → Privacy & Security → Accessibility → enable **Snap Cat**)
 2. Quit and reopen Snap Cat once so the grant sticks
-3. Press **⌘←** on any window
+3. Press **⌘←** on any window (or pick another modifier under **Modifier Key**)
 
 <br />
 
 ## ⌨️ Hotkeys
 
+Default modifier is **⌘**. Change it in the menu bar → **Modifier Key** (⌘ / ⌥ / ⌃). Persists.
+
 | Shortcut | Action |
 |----------|--------|
-| **⌘←** | Left half |
-| **⌘→** | Right half |
-| **⌘↑** | Fill screen (usable area — menu bar and Dock stay put) |
-| **⌘↓** | Minimize |
+| **mod←** | Left half |
+| **mod→** | Right half |
+| **mod↑** | Fill screen (usable area — menu bar and Dock stay put) |
+| **mod↓** | Minimize |
 
 Not macOS Full Screen. Fill uses the screen's **visible frame** so the window stays a normal windowed app.
 
@@ -53,19 +55,20 @@ Not macOS Full Screen. Fill uses the screen's **visible frame** so the window st
 - **Minimize** via Accessibility, same as the yellow button
 
 ### 🧠 **Smart Pass-Through**
-- **Typing wins** — in a real text field (non-browser apps), ⌘← / ⌘→ stay "line start / line end"
+- **Typing wins** — in a real text field (non-browser apps), mod← / mod→ stay line nav
 - **Browsers always snap** — Brave, Chrome, Safari, Arc, etc. never pass through (sites park focus in sidebars like x.com Grok)
 - **Terminals snap** — Warp, Terminal, iTerm, and friends always get window actions (their UI is one big text view)
 
 ### ☰ **Menu Bar App**
 - **Status item** with Snap Left / Right / Fill / Minimize
 - **Keyboard Shortcuts** checkmark — disable global hotkeys without quitting (persists)
+- **Modifier Key** — Command / Option / Control (persists)
 - **Accessibility Settings…** deep link when the grant goes missing
 - Menu actions still work when hotkeys are off
 
 ### 🪶 **Tiny By Design**
 - **One Swift file** — the whole app lives in `Sources/main.swift`
-- **No preferences** — hotkeys are fixed; less code, less UI, fewer bugs
+- **No preference window** — settings live in the menu bar
 - **No network** — no updater, analytics, or phoning home
 - **Menu bar only** — `LSUIElement`, no Dock icon
 
@@ -130,14 +133,14 @@ pkill -x SnapCat
 | **Swift** | App language |
 | **Cocoa** | Menu bar status item |
 | **ApplicationServices (AX)** | Read/write front window frames, minimize |
-| **CGEvent tap** | Global ⌘+arrow hotkeys with pass-through |
+| **CGEvent tap** | Global modifier+arrow hotkeys with pass-through |
 | **Carbon.HIToolbox** | Virtual key codes only |
 
 <br />
 
 ## 📚 How It Works
 
-1. A **CGEvent tap** watches key-downs for pure ⌘ + arrow (no Shift / Option / Control).
+1. A **CGEvent tap** watches key-downs for pure chosen modifier + arrow (no extra modifiers).
 2. If focus is a **real text field**, the key is left alone (line / document navigation).
 3. Otherwise Snap Cat **swallows** the event and resizes or minimizes the front window via **Accessibility**.
 4. Frames use `NSScreen.visibleFrame` so menu bar and Dock remain visible.
@@ -179,7 +182,7 @@ Keep it small. New tile layouts, prefs panes, and updaters are usually out of sc
 ./build.sh && open -a SnapCat
 ```
 
-Grant Accessibility. Press ⌘←. Done.
+Grant Accessibility. Press mod←. Done.
 
 <br />
 

@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.8.0
+
+  Add modifier key setting
+  Persist Command Option Control
+
 2.7.0
 
   Fix icon venv with uv

@@ -224,7 +224,47 @@ func snap(_ action: SnapAction) {
     AX.setFrame(win, rect)
 }
 
-// MARK: - Hotkeys (⌘ arrows via CGEvent tap — pass through in text fields)
+// MARK: - Modifier key (pure one modifier + arrow)
+
+enum SnapModifier: String, CaseIterable {
+    case command
+    case option
+    case control
+
+    var flag: CGEventFlags {
+        switch self {
+        case .command: .maskCommand
+        case .option:  .maskAlternate
+        case .control: .maskControl
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .command: "⌘"
+        case .option:  "⌥"
+        case .control: "⌃"
+        }
+    }
+
+    var menuTitle: String {
+        switch self {
+        case .command: "Command ⌘"
+        case .option:  "Option ⌥"
+        case .control: "Control ⌃"
+        }
+    }
+
+    static var current: SnapModifier {
+        get {
+            let raw = UserDefaults.standard.string(forKey: "modifierKey") ?? ""
+            return SnapModifier(rawValue: raw) ?? .command
+        }
+        set { UserDefaults.standard.set(newValue.rawValue, forKey: "modifierKey") }
+    }
+}
+
+// MARK: - Hotkeys (modifier + arrows via CGEvent tap — pass through in text fields)
 
 final class HotKeys {
     private var tap: CFMachPort?
@@ -233,6 +273,11 @@ final class HotKeys {
     /// Global snap hotkeys. Menu items always work.
     var isEnabled: Bool = UserDefaults.standard.object(forKey: "shortcutsEnabled") as? Bool ?? true {
         didSet { UserDefaults.standard.set(isEnabled, forKey: "shortcutsEnabled") }
+    }
+
+    /// Pure single modifier required with arrows (no Shift/etc combos).
+    var modifier: SnapModifier = SnapModifier.current {
+        didSet { SnapModifier.current = modifier }
     }
 
     func install() {
@@ -279,9 +324,9 @@ final class HotKeys {
         }
         guard let action else { return Unmanaged.passUnretained(event) }
 
-        // Pure ⌘ only (keep ⌘⇧← select-to-line-start, etc.)
+        // Pure chosen modifier only (keep ⇧ combos for select-to-line-start, etc.)
         let mods: CGEventFlags = [.maskCommand, .maskShift, .maskAlternate, .maskControl]
-        guard event.flags.intersection(mods) == .maskCommand else {
+        guard event.flags.intersection(mods) == modifier.flag else {
             return Unmanaged.passUnretained(event)
         }
 
@@ -301,6 +346,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let hotKeys = HotKeys()
     private var statusItem: NSStatusItem?
     private var shortcutsMenuItem: NSMenuItem?
+    private var snapMenuItems: [NSMenuItem] = []
+    private var modifierMenuItems: [SnapModifier: NSMenuItem] = [:]
 
     /// Drawn template split-rect (menu bar); app icon stays Snapu.
     private static func statusIcon(side: CGFloat = 16) -> NSImage {
@@ -331,14 +378,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             btn.imageScaling = .scaleNone
         }
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Snap Left  ⌘←", action: #selector(snapLeft), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Snap Right  ⌘→", action: #selector(snapRight), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Fill Screen  ⌘↑", action: #selector(snapFill), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Minimize  ⌘↓", action: #selector(snapMinimize), keyEquivalent: ""))
+        let left = NSMenuItem(title: "", action: #selector(snapLeft), keyEquivalent: "")
+        let right = NSMenuItem(title: "", action: #selector(snapRight), keyEquivalent: "")
+        let fill = NSMenuItem(title: "", action: #selector(snapFill), keyEquivalent: "")
+        let minimize = NSMenuItem(title: "", action: #selector(snapMinimize), keyEquivalent: "")
+        for m in [left, right, fill, minimize] { menu.addItem(m) }
+        snapMenuItems = [left, right, fill, minimize]
         menu.addItem(.separator())
         let shortcuts = NSMenuItem(title: "Keyboard Shortcuts", action: #selector(toggleShortcuts), keyEquivalent: "")
         menu.addItem(shortcuts)
         shortcutsMenuItem = shortcuts
+
+        let modifierRoot = NSMenuItem(title: "Modifier Key", action: nil, keyEquivalent: "")
+        let modifierMenu = NSMenu()
+        for mod in SnapModifier.allCases {
+            let mi = NSMenuItem(title: mod.menuTitle, action: #selector(setModifier(_:)), keyEquivalent: "")
+            mi.representedObject = mod.rawValue
+            modifierMenu.addItem(mi)
+            modifierMenuItems[mod] = mi
+        }
+        modifierRoot.submenu = modifierMenu
+        menu.addItem(modifierRoot)
+
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Accessibility Settings…", action: #selector(openAX), keyEquivalent: ""))
         menu.addItem(.separator())
@@ -365,13 +426,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         refreshShortcutsUI()
     }
 
+    @objc private func setModifier(_ sender: NSMenuItem) {
+        guard let raw = sender.representedObject as? String,
+              let mod = SnapModifier(rawValue: raw) else { return }
+        hotKeys.modifier = mod
+        refreshShortcutsUI()
+    }
+
     private func refreshShortcutsUI() {
         let on = hotKeys.isEnabled
+        let sym = hotKeys.modifier.symbol
         shortcutsMenuItem?.state = on ? .on : .off
         statusItem?.button?.appearsDisabled = !on
         statusItem?.button?.toolTip = on
-            ? "Snap Cat — ⌘← left · ⌘→ right · ⌘↑ fill · ⌘↓ minimize"
+            ? "Snap Cat — \(sym)← left · \(sym)→ right · \(sym)↑ fill · \(sym)↓ minimize"
             : "Snap Cat — shortcuts off"
+
+        if snapMenuItems.count == 4 {
+            snapMenuItems[0].title = "Snap Left  \(sym)←"
+            snapMenuItems[1].title = "Snap Right  \(sym)→"
+            snapMenuItems[2].title = "Fill Screen  \(sym)↑"
+            snapMenuItems[3].title = "Minimize  \(sym)↓"
+        }
+        for (mod, item) in modifierMenuItems {
+            item.state = mod == hotKeys.modifier ? .on : .off
+        }
     }
 
     @objc private func openAX() {
