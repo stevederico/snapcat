@@ -1,5 +1,10 @@
 - multi-display snap polish
 
+2.9.0
+
+  Add Xcode project
+  Add signing xcconfig
+
 2.8.0
 
   Add modifier key setting

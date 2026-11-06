@@ -2,6 +2,13 @@
 HalfSnap.app/
 SnapCat.app/
 .swiftpm/
-*.xcodeproj
 .icon-venv/
 .icon-src/
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+
+# Private signing settings
+Config/Local.xcconfig

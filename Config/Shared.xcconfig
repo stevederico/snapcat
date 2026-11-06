@@ -1,0 +1,8 @@
+// Shared signing settings for the SnapCat target.
+// To sign your own build, copy Local.xcconfig.example to Local.xcconfig (git ignored)
+// and set your team and bundle ID there.
+
+DEVELOPMENT_TEAM =
+PRODUCT_BUNDLE_IDENTIFIER = com.example.snapcat
+
+#include? "Local.xcconfig"

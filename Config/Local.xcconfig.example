@@ -1,0 +1,3 @@
+// Copy to Local.xcconfig (git ignored) and fill in your own values.
+DEVELOPMENT_TEAM = YOURTEAMID
+PRODUCT_BUNDLE_IDENTIFIER = com.yourname.snapcat

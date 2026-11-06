@@ -1,0 +1,270 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7BA42DC9EC23EDB7189A50EA /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 10A7715FF550811FD218685E /* AppIcon.icns */; };
+		6DAD8F816AEB72F99BA365B0 /* diana.k@example.org in Resources */ = {isa = PBXBuildFile; fileRef = 9E96A0310D86567CF2FDDD63 /* diana.k@example.org */; };
+		B362E596762B11C5B5BBE5CD /* StatusBarIcon-full.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AD5BCBE53511326AA218893 /* StatusBarIcon-full.png */; };
+		C88A5C8476E5AE765127F8F4 /* StatusBarIcon-full@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B1A3BAE8A778D9287C874B3 /* StatusBarIcon-full@2x.png */; };
+		5383B81C299A459B15B5E00C /* StatusBarIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = DE127E54D71887F94A630161 /* StatusBarIcon.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		534C8F429091E96A55F491AC /* SnapCat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapCat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		10A7715FF550811FD218685E /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
+		9E96A0310D86567CF2FDDD63 /* diana.k@example.org */ = {isa = PBXFileReference; lastKnownFileType = file; path = "diana.k@example.org"; sourceTree = "<group>"; };
+		6AD5BCBE53511326AA218893 /* StatusBarIcon-full.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "StatusBarIcon-full.png"; sourceTree = "<group>"; };
+		5B1A3BAE8A778D9287C874B3 /* StatusBarIcon-full@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "StatusBarIcon-full@2x.png"; sourceTree = "<group>"; };
+		DE127E54D71887F94A630161 /* StatusBarIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StatusBarIcon.png; sourceTree = "<group>"; };
+		6F365A89D59886C1B2109011 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		FD36A7050DABDA86DA1A3466 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		284E320E0291A1D58EFDF763 /* Sources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3C194F3A8E1B6CEE7C282B8E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		44BAD0ED4D270BBBC8F0D7B6 = {
+			isa = PBXGroup;
+			children = (
+				284E320E0291A1D58EFDF763 /* Sources */,
+				9B1FFE8D61CE5CA59991F929 /* Resources */,
+				26F405EAE26727424823916F /* Config */,
+				0A7576549C292214C9387873 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0A7576549C292214C9387873 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				534C8F429091E96A55F491AC /* SnapCat.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9B1FFE8D61CE5CA59991F929 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				10A7715FF550811FD218685E /* AppIcon.icns */,
+				9E96A0310D86567CF2FDDD63 /* diana.k@example.org */,
+				6AD5BCBE53511326AA218893 /* StatusBarIcon-full.png */,
+				5B1A3BAE8A778D9287C874B3 /* StatusBarIcon-full@2x.png */,
+				DE127E54D71887F94A630161 /* StatusBarIcon.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		26F405EAE26727424823916F /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				6F365A89D59886C1B2109011 /* Shared.xcconfig */,
+				FD36A7050DABDA86DA1A3466 /* Info.plist */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		53089FCAF5B7061E2B94769A /* SnapCat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D89BB21F01E952243B0D0FC /* Build configuration list for PBXNativeTarget "SnapCat" */;
+			buildPhases = (
+				6EB6146A64C33483E7F27F1B /* Sources */,
+				3C194F3A8E1B6CEE7C282B8E /* Frameworks */,
+				EA70AF317E8607319E63DD57 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				284E320E0291A1D58EFDF763 /* Sources */,
+			);
+			name = SnapCat;
+			packageProductDependencies = (
+			);
+			productName = SnapCat;
+			productReference = 534C8F429091E96A55F491AC /* SnapCat.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E607CFB157779D2593854029 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					53089FCAF5B7061E2B94769A = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = 3B73118B5367DD40D49CCD9C /* Build configuration list for PBXProject "SnapCat" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 44BAD0ED4D270BBBC8F0D7B6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 0A7576549C292214C9387873 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				53089FCAF5B7061E2B94769A /* SnapCat */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EA70AF317E8607319E63DD57 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7BA42DC9EC23EDB7189A50EA /* AppIcon.icns in Resources */,
+				6DAD8F816AEB72F99BA365B0 /* diana.k@example.org in Resources */,
+				B362E596762B11C5B5BBE5CD /* StatusBarIcon-full.png in Resources */,
+				C88A5C8476E5AE765127F8F4 /* StatusBarIcon-full@2x.png in Resources */,
+				5383B81C299A459B15B5E00C /* StatusBarIcon.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6EB6146A64C33483E7F27F1B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F6B03AD24AB9400B7CDE5E80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5D35CA9BAE5CE2FE7A640A33 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		AF00DBF3B08E5AFB5BDEBE2B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6F365A89D59886C1B2109011 /* Shared.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = NO;
+				CURRENT_PROJECT_VERSION = 24;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Config/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 2.9.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B99EC9E7E9E636C6C5EC8370 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6F365A89D59886C1B2109011 /* Shared.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = NO;
+				CURRENT_PROJECT_VERSION = 24;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Config/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 2.9.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3B73118B5367DD40D49CCD9C /* Build configuration list for PBXProject "SnapCat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6B03AD24AB9400B7CDE5E80 /* Debug */,
+				5D35CA9BAE5CE2FE7A640A33 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D89BB21F01E952243B0D0FC /* Build configuration list for PBXNativeTarget "SnapCat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AF00DBF3B08E5AFB5BDEBE2B /* Debug */,
+				B99EC9E7E9E636C6C5EC8370 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E607CFB157779D2593854029 /* Project object */;
+}
